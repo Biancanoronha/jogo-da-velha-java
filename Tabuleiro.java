@@ -26,7 +26,7 @@ public class Tabuleiro {
     }
 
     public boolean fazerJogada(int linha, int coluna, char simbolo) {
-        if (tabuleiro[linha][coluna] == ' ') {
+        if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && tabuleiro[linha][coluna] == ' ') {
             tabuleiro[linha][coluna] = simbolo;
             return true;
         }
@@ -40,13 +40,10 @@ public class Tabuleiro {
             if (tabuleiro[0][i] == s && tabuleiro[1][i] == s && tabuleiro[2][i] == s)
                 return true;
         }
-
         if (tabuleiro[0][0] == s && tabuleiro[1][1] == s && tabuleiro[2][2] == s)
             return true;
-
         if (tabuleiro[0][2] == s && tabuleiro[1][1] == s && tabuleiro[2][0] == s)
             return true;
-
         return false;
     }
 
