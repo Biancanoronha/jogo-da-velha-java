@@ -1,60 +1,84 @@
-public class Tabuleiro {
-    private char[][] tabuleiro;
+import java.util.Random;
+import java.util.Scanner;
 
-    public Tabuleiro() {
-        tabuleiro = new char[3][3];
-        inicializar();
-    }
+public class JogoDaVelha {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Random random = new Random();
 
-    public void inicializar() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                tabuleiro[i][j] = ' ';
+        char simboloHumano;
+        char simboloMaquina;
+        while (true) {
+            System.out.print("Escolha seu símbolo (X ou O): ");
+            String input = sc.next().toUpperCase();
+            if (input.length() == 1 && (input.charAt(0) == 'X' || input.charAt(0) == 'O')) {
+                simboloHumano = input.charAt(0);
+                simboloMaquina = (simboloHumano == 'X') ? 'O' : 'X';
+                break;
+            } else {
+                System.out.println("Símbolo inválido. Por favor, escolha 'X' ou 'O'.");
             }
         }
-    }
 
-    public void exibir() {
-        System.out.println();
-        for (int i = 0; i < 3; i++) {
-            System.out.println(" " + tabuleiro[i][0] + " | " + tabuleiro[i][1] + " | " + tabuleiro[i][2]);
-            if (i < 2) {
-                System.out.println("---+---+---");
-            }
-        }
-        System.out.println();
-    }
+        Jogador jogador1 = new Jogador("Jogador 1", simboloHumano);
+        Jogador jogador2 = new Jogador("Jogador 2", simboloMaquina);
+        Tabuleiro tabuleiro = new Tabuleiro();
 
-    public boolean fazerJogada(int linha, int coluna, char simbolo) {
-        if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3 && tabuleiro[linha][coluna] == ' ') {
-            tabuleiro[linha][coluna] = simbolo;
-            return true;
-        }
-        return false;
-    }
+        Jogador atual = jogador1;
+        boolean jogoAcabou = false;
 
-    public boolean verificarVitoria(char s) {
-        for (int i = 0; i < 3; i++) {
-            if (tabuleiro[i][0] == s && tabuleiro[i][1] == s && tabuleiro[i][2] == s)
-                return true;
-            if (tabuleiro[0][i] == s && tabuleiro[1][i] == s && tabuleiro[2][i] == s)
-                return true;
-        }
-        if (tabuleiro[0][0] == s && tabuleiro[1][1] == s && tabuleiro[2][2] == s)
-            return true;
-        if (tabuleiro[0][2] == s && tabuleiro[1][1] == s && tabuleiro[2][0] == s)
-            return true;
-        return false;
-    }
+        while (!jogoAcabou) {
+            System.out.println("\nTurno de " + atual.getNome() + " (" + atual.getSimbolo() + ")");
+            tabuleiro.exibir();
 
-    public boolean cheio() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (tabuleiro[i][j] == ' ') {
-                    return false;
+            int linha, coluna;
+            boolean jogadaValida = false;
+
+            if (atual == jogador1) {
+                while (!jogadaValida) {
+                    System.out.print("Digite a linha (0-2): ");
+                    linha = sc.nextInt();
+                    System.out.print("Digite a coluna (0-2): ");
+                    coluna = sc.nextInt();
+
+                    if (linha >= 0 && linha < 3 && coluna >= 0 && coluna < 3) {
+                        if (tabuleiro.fazerJogada(linha, coluna, atual.getSimbolo())) {
+                            jogadaValida = true;
+                        } else {
+                            System.out.println("Posição ocupada ou inválida! Tente novamente.");
+                        }
+                    } else {
+                        System.out.println("Coordenadas fora do limite (0-2)! Tente novamente.");
+                    }
+                }
+            } else {
+                while (!jogadaValida) {
+                    linha = random.nextInt(3);
+                    coluna = random.nextInt(3);
+                    if (tabuleiro.fazerJogada(linha, coluna, atual.getSimbolo())) {
+                        jogadaValida = true;
+                    }
                 }
             }
+
+            if (tabuleiro.verificarVitoria(atual.getSimbolo())) {
+                tabuleiro.exibir();
+                if (atual.getNome().equals("Jogador 1")) {
+                    System.out.println("O jogador 1 ganhou");
+                } else {
+                    System.out.println("O jogador 2 ganhou");
+                }
+                jogoAcabou = true;
+            } else if (tabuleiro.cheio()) {
+                tabuleiro.exibir();
+                System.out.println("O jogo terminou empatado.");
+                jogoAcabou = true;
+            } else {
+                atual = (atual == jogador1) ? jogador2 : jogador1;
+            }
         }
-        return true;
+
+        System.out.println("Criado por Bianca Teixeira");
+        sc.close();
     }
 }
