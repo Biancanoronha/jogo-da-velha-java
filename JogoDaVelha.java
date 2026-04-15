@@ -4,8 +4,20 @@ public class JogoDaVelha {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        Jogador jogador1 = new Jogador("Jogador 1", 'X');
-        Jogador jogador2 = new Jogador("Jogador 2", 'O');
+        // Escolha do símbolo
+        System.out.print("Escolha seu símbolo (X ou O): ");
+        char simboloHumano = sc.next().toUpperCase().charAt(0);
+
+        char simboloMaquina;
+        if (simboloHumano == 'X') {
+            simboloMaquina = 'O';
+        } else {
+            simboloMaquina = 'X';
+        }
+
+        // Nomes alinhados com o enunciado (blindagem total)
+        Jogador jogador1 = new Jogador("Jogador 1", simboloHumano);
+        Jogador jogador2 = new Jogador("Jogador 2", simboloMaquina);
 
         Tabuleiro tabuleiro = new Tabuleiro();
 
@@ -13,32 +25,58 @@ public class JogoDaVelha {
         boolean jogoAcabou = false;
 
         while (!jogoAcabou) {
-            System.out.println(atual.getNome() + " (" + atual.getSimbolo() + "), sua vez:");
+
+            System.out.println(atual.getNome() + " (" + atual.getSimbolo() + ")");
             tabuleiro.exibir();
 
-            System.out.print("Linha (0-2): ");
-            int linha = sc.nextInt();
+            int linha, coluna;
 
-            System.out.print("Coluna (0-2): ");
-            int coluna = sc.nextInt();
+            // Jogada do humano
+            if (atual == jogador1) {
+                System.out.print("Linha (0-2): ");
+                linha = sc.nextInt();
+
+                System.out.print("Coluna (0-2): ");
+                coluna = sc.nextInt();
+            } 
+            // Jogada da máquina
+            else {
+                linha = (int)(Math.random() * 3);
+                coluna = (int)(Math.random() * 3);
+                System.out.println("Jogador 2 escolheu: " + linha + ", " + coluna);
+            }
 
             if (!tabuleiro.fazerJogada(linha, coluna, atual.getSimbolo())) {
                 System.out.println("Posição ocupada! Tente novamente.");
                 continue;
             }
 
+            // Vitória
             if (tabuleiro.verificarVitoria(atual.getSimbolo())) {
                 tabuleiro.exibir();
-                System.out.println(atual.getNome() + " venceu!");
+
+                if (atual == jogador1) {
+                    System.out.println("O jogador 1 ganhou");
+                } else {
+                    System.out.println("O jogador 2 ganhou");
+                }
+
                 jogoAcabou = true;
-            } else if (tabuleiro.cheio()) {
+            } 
+            // Empate
+            else if (tabuleiro.cheio()) {
                 tabuleiro.exibir();
-                System.out.println("Empate!");
+                System.out.println("O jogo terminou empatado.");
                 jogoAcabou = true;
-            } else {
+            } 
+            // Troca de jogador
+            else {
                 atual = (atual == jogador1) ? jogador2 : jogador1;
             }
         }
+
+        // Obrigatório
+        System.out.println("Criado por Bianca Teixeira");
 
         sc.close();
     }
