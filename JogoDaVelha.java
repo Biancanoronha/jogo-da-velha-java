@@ -6,7 +6,6 @@ public class JogoDaVelha {
         Scanner sc = new Scanner(System.in);
         Random random = new Random();
 
-        // 1) Perguntar ao jogador humano qual é o símbolo que ele quer usar
         char simboloHumano;
         char simboloMaquina;
         while (true) {
@@ -29,7 +28,6 @@ public class JogoDaVelha {
         boolean jogoAcabou = false;
 
         while (!jogoAcabou) {
-            // 3) O programa deve imprimir o nome do jogador antes de mostrar o tabuleiro
             System.out.println("\nTurno de " + atual.getNome() + " (" + atual.getSimbolo() + ")");
             tabuleiro.exibir();
 
@@ -37,7 +35,6 @@ public class JogoDaVelha {
             boolean jogadaValida = false;
 
             if (atual == jogador1) {
-                // 2) A cada partida, o programa deve perguntar ao jogador humano em qual casa ele quer colocar seu símbolo
                 while (!jogadaValida) {
                     System.out.print("Digite a linha (0-2): ");
                     linha = sc.nextInt();
@@ -54,39 +51,33 @@ public class JogoDaVelha {
                         System.out.println("Coordenadas fora do limite (0-2)! Tente novamente.");
                     }
                 }
-            } else { // Jogada da máquina
+            } else {
                 while (!jogadaValida) {
                     linha = random.nextInt(3);
                     coluna = random.nextInt(3);
                     if (tabuleiro.fazerJogada(linha, coluna, atual.getSimbolo())) {
-                        System.out.println("Jogador 2 escolheu: " + linha + ", " + coluna);
                         jogadaValida = true;
                     }
                 }
             }
 
-            // Verifica vitória
             if (tabuleiro.verificarVitoria(atual.getSimbolo())) {
                 tabuleiro.exibir();
-                // 4) O programa deverá ao final exibir uma destas mensagens
                 if (atual.getNome().equals("Jogador 1")) {
                     System.out.println("O jogador 1 ganhou");
                 } else {
                     System.out.println("O jogador 2 ganhou");
                 }
                 jogoAcabou = true;
-            } else if (tabuleiro.cheio()) { // Verifica empate
+            } else if (tabuleiro.cheio()) {
                 tabuleiro.exibir();
-                // 4) O programa deverá ao final exibir uma destas mensagens
                 System.out.println("O jogo terminou empatado.");
                 jogoAcabou = true;
             } else {
-                // Troca de jogador
                 atual = (atual == jogador1) ? jogador2 : jogador1;
             }
         }
 
-        // IMPORTANTE: O programa deverá terminar imprimindo a mensagem: "Criado por [SEU NOME]".
         System.out.println("Criado por Bianca Teixeira");
         sc.close();
     }
