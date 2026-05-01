@@ -7,6 +7,10 @@ public class Jogador {
         this.simbolo = simbolo;
     }
 
+    public Jogador(char simbolo) {
+        this.simbolo = simbolo;
+    }
+
     public String getNome() {
         return nome;
     }
