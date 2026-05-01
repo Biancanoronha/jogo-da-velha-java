@@ -44,6 +44,7 @@ public class Tabuleiro {
             return true;
         if (tabuleiro[0][2] == s && tabuleiro[1][1] == s && tabuleiro[2][0] == s)
             return true;
+
         return false;
     }
 
@@ -56,5 +57,8 @@ public class Tabuleiro {
             }
         }
         return true;
+    }
+    public boolean acabouOJogo() {
+        return cheio() || verificarVitoria('X') || verificarVitoria('O');
     }
 }
